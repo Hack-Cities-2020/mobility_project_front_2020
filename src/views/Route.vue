@@ -34,7 +34,7 @@
                 ></v-text-field>
                 <v-dialog v-model="color_picker" width="300">
                   <v-card>
-                    <v-color-picker v-model="form.edited_item.color"></v-color-picker>
+                    <v-color-picker v-model="form.edited_item.path_color"></v-color-picker>
                   </v-card>
                 </v-dialog>
                 <!-- route -->
@@ -47,18 +47,18 @@
                   <GmapPolyline
                     :editable="true"
                     :path.sync="form.edited_item.path"
-                    :options="{ strokeColor: form.edited_item.color, strokeWeight: 6 }"
+                    :options="{ strokeColor: form.edited_item.path_color, strokeWeight: 6 }"
                     @path_changed="event => form.edited_item.path=event.i"
                   ></GmapPolyline>
                   <GmapMarker
                     v-if="form.edited_item.path.length"
                     :position="form.edited_item.path[0]"
-                    :icon="routeMarkerIcon(form.edited_item.color)"
+                    :icon="routeMarkerIcon(form.edited_item.path_color)"
                   ></GmapMarker>
                   <GmapMarker
                     v-if="form.edited_item.path.length > 1"
                     :position="form.edited_item.path[form.edited_item.path.length - 1]"
-                    :icon="routeMarkerIcon(form.edited_item.color)"
+                    :icon="routeMarkerIcon(form.edited_item.path_color)"
                   ></GmapMarker>
                 </BaseMap>
               </v-col>
@@ -129,7 +129,9 @@ export default {
     show_route: {},
   }),
   beforeRouteEnter(to, from, next) {
-    axios.get(`${API_URL}/api/route`).then(response => next(vm => vm.routes=response.data))
+    axios.get(`${API_URL}/api/route`).then(response => {
+      next(vm => vm.routes=response.data);
+    });
   },
   methods: {
     routeMarkerIcon(color) {
@@ -147,16 +149,22 @@ export default {
       var _route = { ...route };
       delete _route.id;
       this.routes.push(_route);
-      axios.post(`${API_URL}/api/route`, _route).then(response => this.routes.push(response.data));
+      axios.post(`${API_URL}/api/route`, _route).then(response => {
+        this.routes.push(response.data);
+      });
     },
     update(route) {
       console.log('updating route:', route);
-      var index = this.routes.findIndex(_route => _route.id == route.id);
-      this.routes.splice(index, 1, route);
+      axios.put(`${API_URL}/api/route/${route.id}`, route).then(response => {
+        var index = this.routes.findIndex(_route => _route.id == response.data.id);
+        this.routes.splice(index, 1, response.data);
+      });
     },
     remove(route) {
       console.log('removing route:', route);
-      this.routes.splice(this.routes.indexOf(route), 1);
+      axios.delete(`${API_URL}/api/route/${route.id}`).then(() => {
+        this.routes.splice(this.routes.indexOf(route), 1);
+      });
     }
   }
 }
