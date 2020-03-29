@@ -20,21 +20,36 @@ export default {
     height: { type: String, default: "400px" },
     zoom: { type: Number, default: 10 },
     bounds: { type: Array, default: () => [] },
-    center: { type: Object, default: () => ({lat: -16.5, lng: -68.15}) }
+    center: { type: Object, default: () => ({ lat: -16.5, lng: -68.15 }) }
   },
-  data: () => ({}),
+  data: () => ({
+    map: null
+  }),
   computed: {
     google: gmapApi
   },
   mounted() {
-    if (this.bounds.length) {
-      this.$refs.map.$mapPromise.then(map => {
+    this.$refs.map.$mapPromise.then(map => {
+      this.map = map;
+      this.fitBounds(this.bounds);
+    });
+  },
+  watch: {
+    bounds() {
+      if (this.map) {
+        this.fitBounds(this.bounds);
+      }
+    }
+  },
+  methods: {
+    fitBounds(points) {
+      if (points.length) {
         var bounds = new this.google.maps.LatLngBounds();
-        this.bounds.forEach(point => {
+        points.forEach(point => {
           bounds.extend(point);
         });
-        map.fitBounds(bounds);
-      });
+        this.map.fitBounds(bounds);
+      }
     }
   }
 }
