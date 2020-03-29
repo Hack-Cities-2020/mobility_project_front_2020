@@ -1,60 +1,66 @@
 <template>
   <v-app>
-    <v-app-bar
-      app
+    <v-navigation-drawer
+      v-model="drawer"
+      :mini-variant.sync="mini"
       color="primary"
+      permanent
       dark
+      app
     >
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
+      <v-list-item class="px-3 my-4">
+        <v-app-bar-nav-icon @click.stop="mini = !mini" />
+        <v-list-item-title class="text-center title">HACK-FELLAS</v-list-item-title>
+        <v-btn icon @click.stop="mini = !mini" >
+          <v-icon>mdi-chevron-left</v-icon>
+        </v-btn>
+      </v-list-item>
 
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div>
-
-      <v-spacer></v-spacer>
-
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
-    </v-app-bar>
+      <v-list dense nav rounded>
+        <template v-for="item in items">
+          <v-list-item
+            :key="item.text"
+            :to="item.to"
+            active-class="secondary tertiary--text"
+            link
+          >
+            <v-list-item-action>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>
+                {{ item.text }}
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </template>
+      </v-list>
+    </v-navigation-drawer>
 
     <v-content>
-      <HelloWorld/>
+      <v-container fluid class="fill-height align-start" style="background-color: #eceff2">
+        <router-view></router-view>
+      </v-container>
     </v-content>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld';
-
 export default {
-  name: 'App',
-
-  components: {
-    HelloWorld,
-  },
-
   data: () => ({
-    //
+    drawer: null,
+    mini: false,
+    items: [
+      { icon: 'mdi-routes-clock', text: "Itinerarios", to: "home" },
+      { icon: 'mdi-map-marker-check-outline', text: "Puntos de control", to: "about" },
+      { icon: 'mdi-bus', text: "Buses", to: "about" },
+    ],
   }),
-};
+}
 </script>
+
+<style>
+.v-list-item--active .v-list-item__title {
+  font-size: 1.15rem !important;
+}
+</style>
