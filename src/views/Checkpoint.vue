@@ -4,6 +4,7 @@
       <CrudTable
         title="Puntos de Control"
         entity="Punto de Control"
+        :enable_create="false"
         :headers="headers"
         :items="checkpoints"
         sortby="id"
@@ -12,12 +13,29 @@
         @update="update"
         @remove="remove"
       >
+        <template #subtitle>
+          <v-select
+            :items="routes"
+            v-model="route"
+            label="Ruta"
+            hide-selected
+            hide-details
+            single-line
+            item-text="name"
+            item-value="id"
+            prepend-icon="mdi-routes-clock"
+            style="max-width: 50%"
+          ></v-select>
+        </template>
         <template #form="form">
             <v-row>
               <v-col cols="12" >
                 {{ form }}
               </v-col>
             </v-row>
+        </template>
+        <template #pretable>
+          <BaseMap width="90%" class="mb-3"></BaseMap>
         </template>
         <template #column_position=item>
           { lat: {{ item.item.lat }}, lng: {{ item.item.lng }} }
@@ -29,14 +47,14 @@
 
 <script>
 // @ is an alias to /src
-// import BaseMap from '@/components/BaseMap'
+import BaseMap from '@/components/BaseMap'
 import CrudTable from '@/components/CrudTable'
 
 export default {
   name: 'Route',
   components: {
     CrudTable,
-    // BaseMap
+    BaseMap
   },
   data: () => ({
     headers: [
@@ -53,6 +71,13 @@ export default {
       { id: 3, route: 'Inca LLojeta - PUC', lat: -16.3999, lng: -68.025 },
       { id: 4, route: 'Irpavi II - PUC', lat: -16.3999, lng: -68.035 },
       { id: 5, route: 'Achumani - San Pedro', lat: -16.3999, lng: -68.045 },
+    ],
+    routes: [
+      { id: 1, name: 'Villa Salome - PUC', color: "#121212", route: [] },
+      { id: 2, name: 'Chasquipampa - PUC', color: "#454545", route: [] },
+      { id: 3, name: 'Inca LLojeta - PUC', color: "#787878", route: [] },
+      { id: 4, name: 'Irpavi II - PUC', color: "#232323", route: [] },
+      { id: 5, name: 'Achumani - San Pedro', color: "#565656", route: [] },
     ],
     next_id: 6,
     color_picker: false,
