@@ -51,7 +51,7 @@ export default {
     drawer: null,
     mini: false,
     items: [
-      { icon: 'mdi-routes-clock', text: "Itinerarios", to: "itinerary" },
+      { icon: 'mdi-routes-clock', text: "Rutas", to: "route" },
       { icon: 'mdi-map-marker-check-outline', text: "Puntos de control", to: "checkpoint" },
       { icon: 'mdi-bus', text: "Buses", to: "bus" },
     ],
