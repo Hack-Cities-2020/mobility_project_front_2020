@@ -21,7 +21,12 @@
                   type="text"
                 ></v-text-field>
                 <v-text-field
-                  v-model="form.edited_item.color"
+                  v-model="form.edited_item.status"
+                  label="Estado"
+                  type="text"
+                ></v-text-field>
+                <v-text-field
+                  v-model="form.edited_item.path_color"
                   label="Color"
                   type="text"
                   class="pt-0"
@@ -34,31 +39,35 @@
                 </v-dialog>
                 <!-- route -->
                 <span class="body-2">Ruta</span>
-                <BaseMap height="300px" @click="event => form.edited_item.route.push(event.latLng)">
+                <BaseMap
+                  height="300px"
+                  :bounds="form.edited_item.path"
+                  @click="event => form.edited_item.path.push(event.latLng)"
+                >
                   <GmapPolyline
                     :editable="true"
-                    :path.sync="form.edited_item.route"
+                    :path.sync="form.edited_item.path"
                     :options="{ strokeColor: form.edited_item.color, strokeWeight: 6 }"
-                    @path_changed="event => form.edited_item.route=event.i"
+                    @path_changed="event => form.edited_item.path=event.i"
                   ></GmapPolyline>
                   <GmapMarker
-                    v-if="form.edited_item.route.length"
-                    :position="form.edited_item.route[0]"
+                    v-if="form.edited_item.path.length"
+                    :position="form.edited_item.path[0]"
                     :icon="routeMarkerIcon(form.edited_item.color)"
                   ></GmapMarker>
                   <GmapMarker
-                    v-if="form.edited_item.route.length > 1"
-                    :position="form.edited_item.route[form.edited_item.route.length - 1]"
+                    v-if="form.edited_item.path.length > 1"
+                    :position="form.edited_item.path[form.edited_item.path.length - 1]"
                     :icon="routeMarkerIcon(form.edited_item.color)"
                   ></GmapMarker>
                 </BaseMap>
               </v-col>
             </v-row>
         </template>
-        <template #column_color="item">
-          <span :style="{color: item.item.color}">{{ item.item.color }}</span>
+        <template #column_path_color="item">
+          <span :style="{color: item.item.path_color}">{{ item.item.path_color }}</span>
         </template>
-        <template #column_route="item">
+        <template #column_path="item">
           <v-dialog v-model="show_route[item.item.id]" width="600px">
             <template v-slot:activator="{ on }">
               <v-btn icon color="primary" v-on="on" >
@@ -66,20 +75,20 @@
               </v-btn>
             </template>
             <v-card>
-              <BaseMap height="300px">
+              <BaseMap :bounds="item.item.path">
                 <GmapPolyline
-                  :path.sync="item.item.route"
-                  :options="{ strokeColor: item.item.color, strokeWeight: 6 }"
+                  :path.sync="item.item.path"
+                  :options="{ strokeColor: item.item.path_color, strokeWeight: 6 }"
                 ></GmapPolyline>
                 <GmapMarker
-                  v-if="item.item.route.length"
-                  :position="item.item.route[0]"
-                  :icon="routeMarkerIcon(item.item.color)"
+                  v-if="item.item.path.length"
+                  :position="item.item.path[0]"
+                  :icon="routeMarkerIcon(item.item.path_color)"
                 ></GmapMarker>
                 <GmapMarker
-                  v-if="item.item.route.length > 1"
-                  :position="item.item.route[item.item.route.length - 1]"
-                  :icon="routeMarkerIcon(item.item.color)"
+                  v-if="item.item.path.length > 1"
+                  :position="item.item.path[item.item.path.length - 1]"
+                  :icon="routeMarkerIcon(item.item.path_color)"
                 ></GmapMarker>
               </BaseMap>
             </v-card>
@@ -92,8 +101,12 @@
 
 <script>
 // @ is an alias to /src
+import axios from "axios";
+
 import BaseMap from '@/components/BaseMap'
 import CrudTable from '@/components/CrudTable'
+
+const API_URL = process.env.VUE_APP_API_URL;
 
 export default {
   name: 'Route',
@@ -105,30 +118,19 @@ export default {
     headers: [
       { text: 'ID', value: 'id' },
       { text: 'Nombre', value: 'name' },
-      { text: 'Color', value: 'color', sortable: false },
-      { text: 'Ruta', value: 'route' },
+      { text: 'Estado', value: 'status' },
+      { text: 'Color', value: 'path_color', sortable: false },
+      { text: 'Ruta', value: 'path' },
       { text: 'Acciones', value: 'action' },
     ],
-    default_item: { id: 0, name: '', color: '#4A6572', route: [] },
-    routes: [
-      { id: 1, name: 'Villa Salome - PUC', color: "#121212", route: [] },
-      { id: 2, name: 'Chasquipampa - PUC', color: "#454545", route: [] },
-      { id: 3, name: 'Inca LLojeta - PUC', color: "#787878", route: [] },
-      { id: 4, name: 'Irpavi II - PUC', color: "#232323", route: [] },
-      { id: 5, name: 'Achumani - San Pedro', color: "#565656", route: [] },
-    ],
-    next_id: 6,
+    default_item: { id: 0, name: '', status: "active", path_color: '#4A6572', path: [] },
+    routes: [],
     color_picker: false,
     show_route: {},
-    route_marker_icon: {
-      path: "M-20,0a20,20 0 1,0 40,0a20,20 0 1,0 -40,0",
-      fillColor: "#000000",
-      fillOpacity: 1,
-      strokeWeight: 2.5,
-      strokeColor: '#F9AA33',
-      scale: 0.5,
-    }
   }),
+  beforeRouteEnter(to, from, next) {
+    axios.get(`${API_URL}/api/route`).then(response => next(vm => vm.routes=response.data))
+  },
   methods: {
     routeMarkerIcon(color) {
       return {
@@ -143,8 +145,9 @@ export default {
     create(route) {
       console.log('creating route:', route);
       var _route = { ...route };
-      _route.id = this.next_id++;
+      delete _route.id;
       this.routes.push(_route);
+      axios.post(`${API_URL}/api/route`, _route).then(response => this.routes.push(response.data));
     },
     update(route) {
       console.log('updating route:', route);
