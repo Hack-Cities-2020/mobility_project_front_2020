@@ -9,11 +9,12 @@
       <v-toolbar flat>
         <v-toolbar-title class="primary--text">{{ title }}</v-toolbar-title>
         <v-divider class="mx-4" inset vertical ></v-divider>
+        <slot name="subtitle"></slot>
         <v-spacer></v-spacer>
-        <v-dialog v-model="dialog" max-width="500px">
+        <v-dialog v-if="enable_create" v-model="dialog" max-width="500px">
           <template v-slot:activator="{ on }">
             <v-btn color="primary" outlined v-on="on" >
-              <v-icon>mdi-plus</v-icon>
+              <v-icon class="mr-3">mdi-plus</v-icon>
               {{ entity }}
             </v-btn>
           </template>
@@ -36,6 +37,9 @@
           </v-card>
         </v-dialog>
       </v-toolbar>
+      <v-row>
+        <slot name="top-extra"></slot>
+      </v-row>
     </template>
     <template v-for="slot in columnSlots" v-slot:[slot.name]="{ item }">
       <div :key="slot.value">
@@ -66,6 +70,7 @@
     props: {
       title: String,
       entity: String,
+      enable_create: { type: Boolean, default: true },
       headers: { type: Array, default: () => [] },
       items: { type: Array, default: () => [] },
       sortby: String,
