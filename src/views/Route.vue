@@ -36,8 +36,10 @@
                 <span class="body-2">Ruta</span>
                 <BaseMap height="300px" @click="event => form.edited_item.route.push(event.latLng)">
                   <GmapPolyline
+                    :editable="true"
                     :path.sync="form.edited_item.route"
                     :options="{ strokeColor: form.edited_item.color, strokeWeight: 6 }"
+                    @path_changed="event => form.edited_item.route=event.i"
                   ></GmapPolyline>
                   <GmapMarker
                     v-if="form.edited_item.route.length"
