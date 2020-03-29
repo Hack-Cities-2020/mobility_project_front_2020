@@ -1,43 +1,43 @@
 <template>
-    <v-row class="justify-center mt-4 mx-auto">
-      <v-col cols="10">
-        <CrudTable
-          title="Buses"
-          entity="Bus"
-          :headers="headers"
-          :items="buses"
-          sortby="id"
-          :default_item="default_item"
-          @create="create"
-          @update="update"
-          @remove="remove"
-        >
-          <template #form="form">
-              <v-row>
-                <v-col cols="12" >
-                  <v-text-field
-                    v-model="form.edited_item.itinerary"
-                    label="Itinerario"
-                    type="text"
-                  ></v-text-field>
-                  <v-text-field
-                    v-model="form.edited_item.driver"
-                    label="Conductor"
-                    type="text"
-                    class="pt-0"
-                  ></v-text-field>
-                  <v-text-field
-                    v-model="form.edited_item.plate"
-                    label="No. de placa"
-                    type="text"
-                    class="pt-0"
-                  ></v-text-field>
-                </v-col>
-              </v-row>
-          </template>
-        </CrudTable>
-      </v-col>
-    </v-row>
+  <v-row class="justify-center mt-4 mx-auto">
+    <v-col cols="10">
+      <CrudTable
+        title="Buses"
+        entity="Bus"
+        :headers="headers"
+        :items="buses"
+        sortby="id"
+        :default_item="default_item"
+        @create="create"
+        @update="update"
+        @remove="remove"
+      >
+        <template #form="form">
+            <v-row>
+              <v-col cols="12" >
+                <v-text-field
+                  v-model="form.edited_item.itinerary"
+                  label="Itinerario"
+                  type="text"
+                ></v-text-field>
+                <v-text-field
+                  v-model="form.edited_item.driver"
+                  label="Conductor"
+                  type="text"
+                  class="pt-0"
+                ></v-text-field>
+                <v-text-field
+                  v-model="form.edited_item.plate"
+                  label="No. de placa"
+                  type="text"
+                  class="pt-0"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+        </template>
+      </CrudTable>
+    </v-col>
+  </v-row>
 </template>
 
 <script>
@@ -45,7 +45,7 @@
 import CrudTable from "@/components/CrudTable.vue";
 
 export default {
-  name: 'Buses',
+  name: 'Bus',
   components: {
     CrudTable
   },
