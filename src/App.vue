@@ -20,7 +20,7 @@
         <template v-for="item in items">
           <v-list-item
             :key="item.text"
-            :to="item.to"
+            :to="{ name: item.to }"
             active-class="secondary tertiary--text"
             link
           >
@@ -51,9 +51,9 @@ export default {
     drawer: null,
     mini: false,
     items: [
-      { icon: 'mdi-routes-clock', text: "Itinerarios", to: "home" },
-      { icon: 'mdi-map-marker-check-outline', text: "Puntos de control", to: "about" },
-      { icon: 'mdi-bus', text: "Buses", to: "about" },
+      { icon: 'mdi-routes-clock', text: "Itinerarios", to: "itinerary" },
+      { icon: 'mdi-map-marker-check-outline', text: "Puntos de control", to: "checkpoint" },
+      { icon: 'mdi-bus', text: "Buses", to: "bus" },
     ],
   }),
 }

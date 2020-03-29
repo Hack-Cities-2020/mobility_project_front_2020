@@ -1,15 +1,17 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+import Itinerary from '../views/Itinerary.vue'
+import Checkpoint from '../views/Checkpoint.vue'
+import Bus from '../views/Bus.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: Home
-  },
+  { path: '/', name: 'home', component: Home },
+  { path: '/itinerary', name: 'itinerary', component: Itinerary },
+  { path: '/checkpoint', name: 'checkpoint', component: Checkpoint },
+  { path: '/bus', name: 'bus', component: Bus },
   {
     path: '/about',
     name: 'About',
