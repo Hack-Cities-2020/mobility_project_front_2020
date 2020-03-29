@@ -37,8 +37,8 @@
           </v-card>
         </v-dialog>
       </v-toolbar>
-      <v-row>
-        <slot name="top-extra"></slot>
+      <v-row class="justify-center">
+        <slot name="pretable"></slot>
       </v-row>
     </template>
     <template v-for="slot in columnSlots" v-slot:[slot.name]="{ item }">
