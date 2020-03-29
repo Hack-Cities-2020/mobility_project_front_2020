@@ -9,9 +9,6 @@
         :items="checkpoints"
         sortby="id"
         :default_item="default_item"
-        @create="create"
-        @update="update"
-        @remove="remove"
       >
         <template #subtitle>
           <v-select
@@ -22,7 +19,7 @@
             hide-details
             single-line
             item-text="name"
-            item-value="id"
+            return-object
             prepend-icon="mdi-routes-clock"
             style="max-width: 50%"
           ></v-select>
@@ -35,7 +32,22 @@
             </v-row>
         </template>
         <template #pretable>
-          <BaseMap width="90%" class="mb-3"></BaseMap>
+          <BaseMap :bounds="route.path" width="90%" class="mb-3">
+            <GmapPolyline
+              :path.sync="route.path"
+              :options="{ strokeColor: route.path_color, strokeWeight: 6 }"
+            ></GmapPolyline>
+            <GmapMarker
+              v-if="route.path.length"
+              :position="route.path[0]"
+              :icon="routeMarkerIcon(route.path_color)"
+            ></GmapMarker>
+            <GmapMarker
+              v-if="route.path.length > 1"
+              :position="route.path[route.path.length - 1]"
+              :icon="routeMarkerIcon(route.path_color)"
+            ></GmapMarker>
+          </BaseMap>
         </template>
         <template #column_position=item>
           { lat: {{ item.item.lat }}, lng: {{ item.item.lng }} }
@@ -47,8 +59,12 @@
 
 <script>
 // @ is an alias to /src
+import axios from 'axios'
+
 import BaseMap from '@/components/BaseMap'
 import CrudTable from '@/components/CrudTable'
+
+const API_URL = process.env.VUE_APP_API_URL;
 
 export default {
   name: 'Checkpoint',
@@ -72,24 +88,15 @@ export default {
       { id: 4, route: 'Irpavi II - PUC', lat: -16.3999, lng: -68.035 },
       { id: 5, route: 'Achumani - San Pedro', lat: -16.3999, lng: -68.045 },
     ],
-    routes: [
-      { id: 1, name: 'Villa Salome - PUC', color: "#121212", route: [] },
-      { id: 2, name: 'Chasquipampa - PUC', color: "#454545", route: [] },
-      { id: 3, name: 'Inca LLojeta - PUC', color: "#787878", route: [] },
-      { id: 4, name: 'Irpavi II - PUC', color: "#232323", route: [] },
-      { id: 5, name: 'Achumani - San Pedro', color: "#565656", route: [] },
-    ],
+    routes: [],
     next_id: 6,
-    route: null,
-    route_marker_icon: {
-      path: "M-20,0a20,20 0 1,0 40,0a20,20 0 1,0 -40,0",
-      fillColor: "#000000",
-      fillOpacity: 1,
-      strokeWeight: 2.5,
-      strokeColor: '#F9AA33',
-      scale: 0.5,
-    }
+    route: { path: [], path_color: "" },
   }),
+  beforeRouteEnter(to, from, next) {
+    axios.get(`${API_URL}/api/route`).then(response => {
+      next(vm => vm.routes=response.data);
+    });
+  },
   methods: {
     routeMarkerIcon(color) {
       return {
@@ -101,21 +108,6 @@ export default {
         scale: 0.5,
       }
     },
-    create(route) {
-      console.log('creating route:', route);
-      var _route = { ...route };
-      _route.id = this.next_id++;
-      this.routes.push(_route);
-    },
-    update(route) {
-      console.log('updating route:', route);
-      var index = this.routes.findIndex(_route => _route.id == route.id);
-      this.routes.splice(index, 1, route);
-    },
-    remove(route) {
-      console.log('removing route:', route);
-      this.routes.splice(this.routes.indexOf(route), 1);
-    }
   }
 }
 </script>
