@@ -51,7 +51,7 @@ import BaseMap from '@/components/BaseMap'
 import CrudTable from '@/components/CrudTable'
 
 export default {
-  name: 'Route',
+  name: 'Checkpoint',
   components: {
     CrudTable,
     BaseMap
@@ -80,8 +80,7 @@ export default {
       { id: 5, name: 'Achumani - San Pedro', color: "#565656", route: [] },
     ],
     next_id: 6,
-    color_picker: false,
-    show_route: {},
+    route: null,
     route_marker_icon: {
       path: "M-20,0a20,20 0 1,0 40,0a20,20 0 1,0 -40,0",
       fillColor: "#000000",
