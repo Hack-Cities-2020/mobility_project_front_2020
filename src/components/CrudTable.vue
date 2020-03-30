@@ -11,7 +11,7 @@
         <v-divider class="mx-4" inset vertical ></v-divider>
         <slot name="subtitle"></slot>
         <v-spacer></v-spacer>
-        <v-dialog v-if="enable_create" v-model="dialog" max-width="500px">
+        <v-dialog v-if="enable_create" v-model="dialog" max-width="600px">
           <template v-slot:activator="{ on }">
             <v-btn color="primary" outlined v-on="on" >
               <v-icon class="mr-3">mdi-plus</v-icon>
@@ -87,7 +87,7 @@
 
     computed: {
       formTitle () {
-        var action = this.edited_index === -1 ? 'New' : 'Edit';
+        var action = this.edited_index === -1 ? 'Nuevo(a)' : 'Editar';
         return action + ' ' + this.entity;
       },
       columnSlots() {
