@@ -14,22 +14,28 @@
       >
         <template #form="form">
             <v-row>
-              <v-col cols="12" >
+              <v-col cols="12" class="pb-0">
                 <v-text-field
                   v-model="form.edited_item.name"
                   label="Nombre"
                   type="text"
+                  hide-details
                 ></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6" class="pb-0">
                 <v-text-field
                   v-model="form.edited_item.status"
                   label="Estado"
                   type="text"
+                  hide-details
                 ></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6" class="pb-0">
                 <v-text-field
                   v-model="form.edited_item.path_color"
                   label="Color"
                   type="text"
-                  class="pt-0"
+                  hide-details
                   @focus="color_picker=true"
                 ></v-text-field>
                 <v-dialog v-model="color_picker" width="300">
@@ -38,6 +44,8 @@
                   </v-card>
                 </v-dialog>
                 <!-- route -->
+              </v-col>
+              <v-col cols="12">
                 <span class="body-2">Ruta</span>
                 <BaseMap
                   height="300px"
