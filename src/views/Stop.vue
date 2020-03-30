@@ -98,16 +98,6 @@ export default {
     });
   },
   methods: {
-    routeMarkerIcon(color) {
-      return {
-        path: "M-20,0a20,20 0 1,0 40,0a20,20 0 1,0 -40,0",
-        fillColor: color,
-        fillOpacity: 1,
-        strokeWeight: 3.5,
-        strokeColor: '#F9AA33',
-        scale: 0.5,
-      }
-    },
     updateRoute() {
       return axios.put(`${API_URL}/api/route/${this.route.id}`, this.route).then(response => {
         var index = this.routes.findIndex(_route => _route.id == response.data.id);
