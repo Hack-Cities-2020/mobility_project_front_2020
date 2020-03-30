@@ -20,6 +20,7 @@ export default {
     height: { type: String, default: "400px" },
     zoom: { type: Number, default: 10 },
     bounds: { type: Array, default: () => [] },
+    bounds_updatable: { type: Boolean, default: false },
     center: { type: Object, default: () => ({ lat: -16.5, lng: -68.15 }) }
   },
   data: () => ({
@@ -36,7 +37,7 @@ export default {
   },
   watch: {
     bounds() {
-      if (this.map) {
+      if (this.map && this.bounds_updatable) {
         this.fitBounds(this.bounds);
       }
     }

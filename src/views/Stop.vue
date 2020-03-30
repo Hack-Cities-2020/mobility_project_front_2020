@@ -32,7 +32,13 @@
             </v-row>
         </template>
         <template #pretable>
-          <BaseMap :bounds="route.path" width="90%" height="350px" class="mb-3">
+          <BaseMap
+            :bounds="route.path"
+            :bounds_updatable="true"
+            width="90%"
+            height="350px"
+            class="mb-3"
+          >
             <GmapPolyline
               :path.sync="route.path"
               :options="{ strokeColor: route.path_color, strokeWeight: 6 }"
