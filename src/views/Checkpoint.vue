@@ -32,10 +32,11 @@
             </v-row>
         </template>
         <template #pretable>
-          <BaseMap :bounds="route.path" width="90%" class="mb-3">
+          <BaseMap :bounds="route.path" width="90%" height="350px" class="mb-3">
             <GmapPolyline
               :path.sync="route.path"
               :options="{ strokeColor: route.path_color, strokeWeight: 6 }"
+              @click="addCheckpoint"
             ></GmapPolyline>
             <GmapMarker
               v-if="route.path.length"
@@ -47,10 +48,22 @@
               :position="route.path[route.path.length - 1]"
               :icon="routeMarkerIcon(route.path_color)"
             ></GmapMarker>
+            <!-- checkpoints -->
+            <GmapMarker
+              v-for="(checkpoint, index) in checkpoints"
+              :key="index"
+              :position="checkpoint"
+              :icon="{ url: '/assets/checkpoint_marker.svg' }"
+            ></GmapMarker>
           </BaseMap>
         </template>
         <template #column_position=item>
           { lat: {{ item.item.lat }}, lng: {{ item.item.lng }} }
+        </template>
+        <template #column_action=item>
+          <v-icon small color="red" @click="deleteCheckpoint(item)" >
+            mdi-delete
+          </v-icon>
         </template>
       </CrudTable>
     </v-col>
@@ -75,23 +88,19 @@ export default {
   data: () => ({
     headers: [
       { text: 'ID', value: 'id' },
-      { text: 'Ruta', value: 'route' },
-      { text: 'Dirección', value: 'address' },
       { text: 'Posición', value: 'position', sortable: false },
       { text: 'Acciones', value: 'action' },
     ],
     default_item: { id: 0, name: '', color: '#4A6572', route: [] },
-    checkpoints: [
-      { id: 1, route: 'Villa Salome - PUC', lat: -16.3999, lng: -68.005 },
-      { id: 2, route: 'Chasquipampa - PUC', lat: -16.3999, lng: -68.015 },
-      { id: 3, route: 'Inca LLojeta - PUC', lat: -16.3999, lng: -68.025 },
-      { id: 4, route: 'Irpavi II - PUC', lat: -16.3999, lng: -68.035 },
-      { id: 5, route: 'Achumani - San Pedro', lat: -16.3999, lng: -68.045 },
-    ],
     routes: [],
     next_id: 6,
-    route: { path: [], path_color: "" },
+    route: { checkpoints: [], path: [], path_color: "" },
   }),
+  computed: {
+    checkpoints() {
+      return this.route.checkpoints.filter(checkpoint => checkpoint.id != undefined);
+    }
+  },
   beforeRouteEnter(to, from, next) {
     axios.get(`${API_URL}/api/route`).then(response => {
       next(vm => vm.routes=response.data);
@@ -108,6 +117,32 @@ export default {
         scale: 0.5,
       }
     },
+    updateRoute() {
+      return axios.put(`${API_URL}/api/route/${this.route.id}`, this.route).then(response => {
+        var index = this.routes.findIndex(_route => _route.id == response.data.id);
+        this.routes.splice(index, 1, response.data);
+        this.route = response.data;
+      });
+    },
+    addCheckpoint(event) {
+      var _checkpoint = { lat: event.latLng.lat(), lng: event.latLng.lng() };
+      this.route.checkpoints.push(_checkpoint);
+      this.updateRoute().catch(error => {
+        console.log(error);
+        this.route.checkpoints.pop();
+      });
+    },
+    deleteCheckpoint(checkpoint) {
+      var sure = confirm(`¿Está seguro que desea eliminar este Punto de Control?`);
+      if (sure) {
+        var index = this.route.checkpoints.indexOf(checkpoint);
+        this.route.checkpoints.splice(index, 1);
+        this.updateRoute().catch(error => {
+          console.log(error);
+          this.route.checkpoints.splice(index, 0, checkpoint);
+        });
+      }
+    }
   }
 }
 </script>
