@@ -33,27 +33,12 @@
         </template>
         <template #pretable>
           <BaseMap
-            :bounds="route.path"
-            :bounds_updatable="true"
+            :route="route"
             width="90%"
             height="350px"
             class="mb-3"
+            @polyline_click="addStop"
           >
-            <GmapPolyline
-              :path.sync="route.path"
-              :options="{ strokeColor: route.path_color, strokeWeight: 6 }"
-              @click="addStop"
-            ></GmapPolyline>
-            <GmapMarker
-              v-if="route.path.length"
-              :position="route.path[0]"
-              :icon="routeMarkerIcon(route.path_color)"
-            ></GmapMarker>
-            <GmapMarker
-              v-if="route.path.length > 1"
-              :position="route.path[route.path.length - 1]"
-              :icon="routeMarkerIcon(route.path_color)"
-            ></GmapMarker>
             <!-- stops -->
             <GmapMarker
               v-for="(stop, index) in stops"

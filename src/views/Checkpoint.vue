@@ -33,27 +33,12 @@
         </template>
         <template #pretable>
           <BaseMap
-            :bounds="route.path"
-            :bounds_updatable="true"
+            :route="route"
             width="90%"
             height="350px"
             class="mb-3"
+            @polyline_click="addCheckpoint"
           >
-            <GmapPolyline
-              :path.sync="route.path"
-              :options="{ strokeColor: route.path_color, strokeWeight: 6 }"
-              @click="addCheckpoint"
-            ></GmapPolyline>
-            <GmapMarker
-              v-if="route.path.length"
-              :position="route.path[0]"
-              :icon="routeMarkerIcon(route.path_color)"
-            ></GmapMarker>
-            <GmapMarker
-              v-if="route.path.length > 1"
-              :position="route.path[route.path.length - 1]"
-              :icon="routeMarkerIcon(route.path_color)"
-            ></GmapMarker>
             <!-- checkpoints -->
             <GmapMarker
               v-for="(checkpoint, index) in checkpoints"
@@ -113,16 +98,6 @@ export default {
     });
   },
   methods: {
-    routeMarkerIcon(color) {
-      return {
-        path: "M-20,0a20,20 0 1,0 40,0a20,20 0 1,0 -40,0",
-        fillColor: color,
-        fillOpacity: 1,
-        strokeWeight: 3.5,
-        strokeColor: '#F9AA33',
-        scale: 0.5,
-      }
-    },
     updateRoute() {
       return axios.put(`${API_URL}/api/route/${this.route.id}`, this.route).then(response => {
         var index = this.routes.findIndex(_route => _route.id == response.data.id);

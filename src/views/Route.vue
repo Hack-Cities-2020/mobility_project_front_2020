@@ -49,25 +49,10 @@
                 <span class="body-2">Ruta</span>
                 <BaseMap
                   height="300px"
-                  :bounds="form.edited_item.path"
+                  :editable="true"
+                  :route="form.edited_item"
                   @click="event => form.edited_item.path.push(event.latLng)"
                 >
-                  <GmapPolyline
-                    :editable="true"
-                    :path.sync="form.edited_item.path"
-                    :options="{ strokeColor: form.edited_item.path_color, strokeWeight: 6 }"
-                    @path_changed="event => form.edited_item.path=event.i"
-                  ></GmapPolyline>
-                  <GmapMarker
-                    v-if="form.edited_item.path.length"
-                    :position="form.edited_item.path[0]"
-                    :icon="routeMarkerIcon(form.edited_item.path_color)"
-                  ></GmapMarker>
-                  <GmapMarker
-                    v-if="form.edited_item.path.length > 1"
-                    :position="form.edited_item.path[form.edited_item.path.length - 1]"
-                    :icon="routeMarkerIcon(form.edited_item.path_color)"
-                  ></GmapMarker>
                 </BaseMap>
               </v-col>
             </v-row>
@@ -83,22 +68,7 @@
               </v-btn>
             </template>
             <v-card>
-              <BaseMap :bounds="item.item.path">
-                <GmapPolyline
-                  :path.sync="item.item.path"
-                  :options="{ strokeColor: item.item.path_color, strokeWeight: 6 }"
-                ></GmapPolyline>
-                <GmapMarker
-                  v-if="item.item.path.length"
-                  :position="item.item.path[0]"
-                  :icon="routeMarkerIcon(item.item.path_color)"
-                ></GmapMarker>
-                <GmapMarker
-                  v-if="item.item.path.length > 1"
-                  :position="item.item.path[item.item.path.length - 1]"
-                  :icon="routeMarkerIcon(item.item.path_color)"
-                ></GmapMarker>
-              </BaseMap>
+              <BaseMap :route="item.item"></BaseMap>
             </v-card>
           </v-dialog>
         </template>
@@ -142,16 +112,6 @@ export default {
     });
   },
   methods: {
-    routeMarkerIcon(color) {
-      return {
-        path: "M-20,0a20,20 0 1,0 40,0a20,20 0 1,0 -40,0",
-        fillColor: color,
-        fillOpacity: 1,
-        strokeWeight: 3.5,
-        strokeColor: '#F9AA33',
-        scale: 0.5,
-      }
-    },
     create(route) {
       console.log('creating route:', route);
       var _route = { ...route };
