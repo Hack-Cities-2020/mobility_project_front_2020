@@ -156,7 +156,6 @@ export default {
       console.log('creating route:', route);
       var _route = { ...route };
       delete _route.id;
-      this.routes.push(_route);
       axios.post(`${API_URL}/api/route`, _route).then(response => {
         this.routes.push(response.data);
       });
