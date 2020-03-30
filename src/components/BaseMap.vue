@@ -6,6 +6,7 @@
     :style="{ width: width, height: height }"
     @click="event => $emit('click', event)"
   >
+    <!-- polyline -->
     <GmapPolyline
       :editable="editable"
       :path.sync="route.path"
@@ -23,6 +24,22 @@
       :position="route.path[route.path.length - 1]"
       :icon="routeMarkerIcon(route.path_color)"
     ></GmapMarker>
+    <template v-if="!editable">
+      <!-- checkpoints -->
+      <GmapMarker
+        v-for="(checkpoint, index) in route.checkpoints"
+        :key="`cp-${index}`"
+        :position="checkpoint"
+        :icon="{ url: '/assets/checkpoint_marker.svg' }"
+      ></GmapMarker>
+      <!-- stops -->
+      <GmapMarker
+        v-for="(stop, index) in route.stops"
+        :key="`s-${index}`"
+        :position="stop"
+        :icon="{ url: '/assets/stop_marker.svg' }"
+      ></GmapMarker>
+    </template>
     <slot></slot>
   </GmapMap>
 </template>
@@ -57,7 +74,8 @@ export default {
     });
   },
   watch: {
-    bounds() {
+    bounds(val, oldVal) {
+      console.log("equal", JSON.stringify(val)==JSON.stringify(oldVal))
       if (this.map && !this.editable) {
         this.fitBounds(this.bounds);
       }

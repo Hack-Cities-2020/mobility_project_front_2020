@@ -52,8 +52,7 @@
                   :editable="true"
                   :route="form.edited_item"
                   @click="event => form.edited_item.path.push(event.latLng)"
-                >
-                </BaseMap>
+                ></BaseMap>
               </v-col>
             </v-row>
         </template>
