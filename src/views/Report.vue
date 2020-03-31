@@ -70,9 +70,11 @@ export default {
   },
   methods: {
     requestReport() {
-      console.log(this.selected_routes);
-      console.log(this.selected_buses);
-      console.log(this.period);
+      var data = { routes: this.selected_routes, vehicles: this.selected_buses, period: this.period };
+      axios.post(`${API_URL}/api/reports`, data).then(response => {
+        window.open(response.data.file);
+        // win.focus();
+      });
     }
   }
 }
