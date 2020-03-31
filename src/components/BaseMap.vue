@@ -18,11 +18,15 @@
       v-if="route.path.length"
       :position="route.path[0]"
       :icon="routeMarkerIcon(route.path_color)"
+      :clickable="true"
+      @click="toggleInfoWindow('inicio', route.path[0], `start-${route.id}`, -16)"
     ></GmapMarker>
     <GmapMarker
       v-if="route.path.length > 1"
       :position="route.path[route.path.length - 1]"
       :icon="routeMarkerIcon(route.path_color)"
+      :clickable="true"
+      @click="toggleInfoWindow('fin', route.path[route.path.length - 1], `end-${route.id}`, -16)"
     ></GmapMarker>
     <template v-if="!editable">
       <!-- checkpoints -->
@@ -31,6 +35,8 @@
         :key="`cp-${index}`"
         :position="checkpoint"
         :icon="{ url: '/assets/checkpoint_marker.svg' }"
+        :clickable="true"
+        @click="toggleInfoWindow(`Punto de Control ${checkpoint.id}`, checkpoint, `cp-${index}`)"
       ></GmapMarker>
       <!-- stops -->
       <GmapMarker
@@ -38,8 +44,17 @@
         :key="`s-${index}`"
         :position="stop"
         :icon="{ url: '/assets/stop_marker.svg' }"
+        :clickable="true"
+        @click="toggleInfoWindow(stop.name, stop, `s-${index}`)"
       ></GmapMarker>
     </template>
+    <!-- info window -->
+    <GmapInfoWindow
+      :options="info_options"
+      :position="info_window_pos"
+      :opened="info_win_open"
+      @closeclick="info_win_open=false"
+    ></GmapInfoWindow>
     <slot></slot>
   </GmapMap>
 </template>
@@ -59,7 +74,17 @@ export default {
     center: { type: Object, default: () => ({ lat: -16.5, lng: -68.15 }) }
   },
   data: () => ({
-    map: null
+    map: null,
+    info_window_pos: null,
+    info_win_open: false,
+    current_marker: null,
+    info_options: {
+      content: '',
+      pixelOffset: {
+        width: 0,
+        height: -32
+      }
+    },
   }),
   computed: {
     google: gmapApi,
@@ -99,6 +124,20 @@ export default {
           bounds.extend(point);
         });
         this.map.fitBounds(bounds);
+      }
+    },
+    toggleInfoWindow(content, position, key, offset=-32) {
+      this.info_window_pos = position;
+      this.info_options.content = content;
+      this.info_options.pixelOffset.height = offset;
+      //check if its the same marker that was selected if yes toggle
+      if (this.current_marker == key) {
+        this.info_win_open = !this.info_win_open;
+      }
+      //if different marker set infowindow to open and reset current marker index
+      else {
+        this.info_win_open = true;
+        this.current_marker = key;
       }
     }
   }
