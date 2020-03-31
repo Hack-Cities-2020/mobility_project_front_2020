@@ -51,6 +51,7 @@ export default {
     drawer: null,
     mini: false,
     items: [
+      { icon: 'mdi-map-clock', text: "Monitoreo", to: "monitor" },
       { icon: 'mdi-routes-clock', text: "Rutas", to: "route" },
       { icon: 'mdi-bus-stop-covered', text: "Paradas", to: "stop" },
       { icon: 'mdi-map-marker-check-outline', text: "Puntos de control", to: "checkpoint" },

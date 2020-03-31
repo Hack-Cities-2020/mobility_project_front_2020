@@ -10,6 +10,7 @@ Vue.use(VueRouter)
 
 const routes = [
   { path: '/', name: 'home', component: Home },
+  { path: '/monitor', name: 'monitor', component: Home },
   { path: '/route', name: 'route', component: Route },
   { path: '/stop', name: 'stop', component: Stop },
   { path: '/checkpoint', name: 'checkpoint', component: Checkpoint },
