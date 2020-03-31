@@ -5,6 +5,7 @@ import Route from '../views/Route.vue'
 import Stop from '../views/Stop.vue'
 import Checkpoint from '../views/Checkpoint.vue'
 import Bus from '../views/Bus.vue'
+import Report from '../views/Report.vue'
 
 Vue.use(VueRouter)
 
@@ -15,6 +16,7 @@ const routes = [
   { path: '/stop', name: 'stop', component: Stop },
   { path: '/checkpoint', name: 'checkpoint', component: Checkpoint },
   { path: '/bus', name: 'bus', component: Bus },
+  { path: '/report', name: 'report', component: Report },
   {
     path: '/about',
     name: 'About',

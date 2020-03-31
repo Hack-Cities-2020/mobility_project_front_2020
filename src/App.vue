@@ -56,6 +56,7 @@ export default {
       { icon: 'mdi-bus-stop-covered', text: "Paradas", to: "stop" },
       { icon: 'mdi-map-marker-check-outline', text: "Puntos de control", to: "checkpoint" },
       { icon: 'mdi-bus', text: "Buses", to: "bus" },
+      { icon: 'mdi-file-chart', text: "Reportes", to: "report" },
     ],
   }),
 }
