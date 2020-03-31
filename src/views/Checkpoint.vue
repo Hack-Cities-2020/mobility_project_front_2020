@@ -52,7 +52,7 @@
           { lat: {{ item.item.lat }}, lng: {{ item.item.lng }} }
         </template>
         <template #column_action=item>
-          <v-icon small color="red" @click="deleteCheckpoint(item)" >
+          <v-icon small color="red" @click="deleteCheckpoint(item.item)" >
             mdi-delete
           </v-icon>
         </template>
@@ -107,20 +107,20 @@ export default {
     },
     addCheckpoint(event) {
       var _checkpoint = { lat: event.latLng.lat(), lng: event.latLng.lng() };
-      this.route.checkpoints.push(_checkpoint);
-      this.updateRoute().catch(error => {
-        console.log(error);
-        this.route.checkpoints.pop();
+      axios.put(`${API_URL}/api/route/${this.route.id}/checkpoints`, _checkpoint).then(response => {
+        var index = this.routes.findIndex(_route => _route.id == this.route.id);
+        this.route.checkpoints.push(response.data);
+        this.routes[index] = this.route;
       });
     },
     deleteCheckpoint(checkpoint) {
       var sure = confirm(`¿Está seguro que desea eliminar este Punto de Control?`);
       if (sure) {
-        var index = this.route.checkpoints.indexOf(checkpoint);
-        this.route.checkpoints.splice(index, 1);
-        this.updateRoute().catch(error => {
-          console.log(error);
-          this.route.checkpoints.splice(index, 0, checkpoint);
+        axios.delete(`${API_URL}/api/route/${this.route.id}/checkpoints/${checkpoint.id}`).then(() => {
+          var index = this.route.checkpoints.indexOf(checkpoint);
+          this.route.checkpoints.splice(index, 1);
+          index = this.routes.findIndex(_route => _route.id == this.route.id);
+          this.routes[index] = this.route;
         });
       }
     }
