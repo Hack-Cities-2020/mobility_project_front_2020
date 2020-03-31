@@ -39,13 +39,6 @@
             class="mb-3"
             @polyline_click="addCheckpoint"
           >
-            <!-- checkpoints -->
-            <GmapMarker
-              v-for="(checkpoint, index) in checkpoints"
-              :key="index"
-              :position="checkpoint"
-              :icon="{ url: '/assets/checkpoint_marker.svg' }"
-            ></GmapMarker>
           </BaseMap>
         </template>
         <template #column_position=item>

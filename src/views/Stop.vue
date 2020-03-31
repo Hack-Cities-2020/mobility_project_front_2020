@@ -32,13 +32,6 @@
             class="mb-3"
             @polyline_click="createStop"
           >
-            <!-- stops -->
-            <GmapMarker
-              v-for="(stop, index) in stops"
-              :key="index"
-              :position="stop"
-              :icon="{ url: '/assets/stop_marker.svg' }"
-            ></GmapMarker>
           </BaseMap>
         </template>
         <template #column_position=item>
