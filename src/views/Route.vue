@@ -117,6 +117,7 @@ export default {
       delete _route.id;
       axios.post(`${API_URL}/api/route`, _route).then(response => {
         this.routes.push(response.data);
+        this.default_item.path = [];
       });
     },
     update(route) {
