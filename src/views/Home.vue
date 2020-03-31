@@ -13,7 +13,12 @@
             :icon="{ url: '/assets/bus_marker.svg' }"
             :position="bus_positions[bus.id] || { lat: 0.0, lng: 0.0 }"
             :clickable="true"
-            @click="toggleInfoWindow(`Bus:<br>placa: ${bus.plate}<br>velocidad: ${bus_positions[bus.id].speed}`, bus_positions[bus.id], `b-${bus.id}`)"
+            @click="toggleInfoWindow(`
+              <b>Bus:</b><br>
+              placa: ${bus.plate}<br>
+              velocidad: ${bus_positions[bus.id].speed}<br>
+              ETA próximo punto de control: ${bus_positions[bus.id].eta}
+            `, bus_positions[bus.id], `b-${bus.id}`)"
           ></GmapMarker>
         </template>
       </MonitoringMap>
@@ -80,7 +85,8 @@ export default {
           var position = {
             lat: parseFloat(record.latitude),
             lng: parseFloat(record.longitude),
-            speed: parseFloat(record.speed)
+            speed: parseFloat(record.speed),
+            eta: `${Math.floor(Math.random() * (15 - 5) ) + 5} min`
           };
           this.bus_positions[record.idBus] = position;
           this.$refs[`b-${record.idBus}`][0].$markerObject.setPosition(position);
