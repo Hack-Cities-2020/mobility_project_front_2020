@@ -75,8 +75,8 @@ export default {
   },
   watch: {
     bounds(val, oldVal) {
-      console.log("equal", JSON.stringify(val)==JSON.stringify(oldVal))
-      if (this.map && !this.editable) {
+      var equal = JSON.stringify(val)==JSON.stringify(oldVal);
+      if (this.map && !this.editable && !equal) {
         this.fitBounds(this.bounds);
       }
     }
